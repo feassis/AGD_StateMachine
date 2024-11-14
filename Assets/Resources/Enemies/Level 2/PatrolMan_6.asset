@@ -28,4 +28,4 @@ MonoBehaviour:
   PatrollingPoints:
   - {x: 7.5, y: 1.5, z: -3}
   - {x: 7.5, y: 1.5, z: -10}
-  PlayerStoppingDistance: 2
+  PlayerStoppingDistance: 4

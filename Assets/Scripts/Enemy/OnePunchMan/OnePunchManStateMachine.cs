@@ -17,7 +17,7 @@ namespace StatePattern.Enemy
 
         private void CreateStates()
         {
-            States.Add(Enemy.States.IDLE, new IdleState(this));
+            States.Add(Enemy.States.IDLE, new IdleState(this, Enemy.States.ROTATING));
             States.Add(Enemy.States.ROTATING, new RotatingState(this));
             States.Add(Enemy.States.SHOOTING, new ShootingState(this));
         }

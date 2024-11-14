@@ -9,8 +9,13 @@ namespace StatePattern.Enemy
         public EnemyController Owner { get; set; }
         private IStateMachine stateMachine;
         private float timer;
-
-        public IdleState(IStateMachine stateMachine) => this.stateMachine = stateMachine;
+        private States desiredAfterState;
+        public IdleState(IStateMachine stateMachine, States desiredAfterState)
+        {
+            this.stateMachine = stateMachine;
+            this.desiredAfterState = desiredAfterState;
+        }
+            
 
         public void OnStateEnter() => ResetTimer();
 
@@ -18,7 +23,7 @@ namespace StatePattern.Enemy
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
-                stateMachine.ChangeState(States.ROTATING);
+                stateMachine.ChangeState(desiredAfterState);
         }
 
         public void OnStateExit() => timer = 0;

@@ -29,6 +29,7 @@ namespace StatePattern.Enemy
         private void InitializeView()
         {
             enemyView = Object.Instantiate(enemyScriptableObject.EnemyPrefab);
+            enemyView.SetController(this);
             enemyView.transform.position = enemyScriptableObject.SpawnPosition;
             enemyView.transform.rotation = Quaternion.Euler(enemyScriptableObject.SpawnRotation);
             enemyView.SetTriggerRadius(enemyScriptableObject.RangeRadius);
@@ -46,6 +47,8 @@ namespace StatePattern.Enemy
             Agent.SetDestination(enemyScriptableObject.SpawnPosition);
             Agent.speed = enemyScriptableObject.MovementSpeed;
         }
+
+        public Transform GetViewTransform() => enemyView.transform; 
 
         public virtual void Die() 
         {

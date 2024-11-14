@@ -1,5 +1,6 @@
 ﻿using StatePattern.Main;
 using StatePattern.Player;
+using UnityEngine;
 
 namespace StatePattern.Enemy
 {
@@ -31,12 +32,11 @@ namespace StatePattern.Enemy
 
 
         private void SetTarget() => target = GameService.Instance.PlayerService.GetPlayer();
-
         private void SetStoppingDistance() => Owner.Agent.stoppingDistance = Owner.Data.PlayerStoppingDistance;
 
         private bool MoveTowardsTarget() => Owner.Agent.SetDestination(target.Position);
 
-        private bool ReachedTarget() => Owner.Agent.remainingDistance <= Owner.Agent.stoppingDistance;
+        private bool ReachedTarget() => Vector3.Distance(target.Position,Owner.GetViewTransform().position) <= Owner.Agent.stoppingDistance;
 
         private void ResetPath()
         {
