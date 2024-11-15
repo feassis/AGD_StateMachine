@@ -35,11 +35,16 @@ namespace StatePattern.Enemy
             foreach(EnemyScriptableObject enemySO in enemyDataForLevel)
             {
                 EnemyController enemy = CreateEnemy(enemySO);
-                activeEnemies.Add(enemy);
+                AddEnemy(enemy);
             }
 
             SetEnemyCount();
             UnsubscribeToEvents();
+        }
+
+        public void AddEnemy(EnemyController enemy)
+        {
+            activeEnemies.Add(enemy);
         }
 
         private void SetEnemyCount()
@@ -62,6 +67,9 @@ namespace StatePattern.Enemy
                     break;
                 case EnemyType.Hitman:
                     enemy = new HitmanController(enemyScriptableObject);
+                    break;
+                case EnemyType.Robot:
+                    enemy = new ClonemanController(enemyScriptableObject);
                     break;
                 default:
                     enemy = new EnemyController(enemyScriptableObject);

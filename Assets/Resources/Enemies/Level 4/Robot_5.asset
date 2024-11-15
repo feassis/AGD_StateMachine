@@ -29,3 +29,5 @@ MonoBehaviour:
   - {x: 5, y: 1.5, z: 5}
   - {x: 7.5, y: 1.5, z: -1}
   PlayerStoppingDistance: 3
+  TeleportingRadius: 4
+  CloneCount: 2
