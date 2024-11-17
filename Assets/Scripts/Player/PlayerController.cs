@@ -35,6 +35,14 @@ namespace StatePattern.Player
             playerView.SetController(this);
         }
 
+        public void ResetPlayer()
+        {
+            playerView.transform.position = playerScriptableObject.SpawnPosition;
+            playerView.transform.rotation = Quaternion.Euler(playerScriptableObject.SpawnRotation);
+
+            InitializeVariables();
+        }
+
         private void InitializeVariables()
         {
             currentHealth = playerScriptableObject.MaximumHealth;

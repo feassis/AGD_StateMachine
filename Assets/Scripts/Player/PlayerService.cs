@@ -20,7 +20,18 @@ namespace StatePattern.Player
 
         public void SpawnPlayer(int levelId)
         {
-            playerController = new PlayerController(playerScriptableObject);
+            if(playerController != null)
+            {
+                playerController.ResetPlayer();
+            }
+            else
+            {
+                playerController = new PlayerController(playerScriptableObject);
+            }
+        }
+
+        ~PlayerService()
+        {
             UnsubscribeToEvents();
         }
 

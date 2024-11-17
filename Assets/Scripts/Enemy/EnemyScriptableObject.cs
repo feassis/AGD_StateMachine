@@ -28,5 +28,8 @@ namespace StatePattern.Enemy
         public float PlayerStoppingDistance;
         public float TeleportingRadius = 4f;
         public int CloneCount;
+
+        public Coin coinPrefab;
+        public int coinsToSpawn = 1;
     }
 }

@@ -50,6 +50,10 @@ namespace StatePattern.Enemy
         public virtual void Die() 
         {
             GameService.Instance.EnemyService.EnemyDied(this);
+            for(int i = 0; i < enemyScriptableObject.coinsToSpawn; i++)
+            {
+                GameObject.Instantiate(enemyScriptableObject.coinPrefab, enemyView.transform.position, Quaternion.identity);
+            }
             enemyView.Destroy();
         }
 

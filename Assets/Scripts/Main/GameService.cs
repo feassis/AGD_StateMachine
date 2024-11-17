@@ -24,6 +24,7 @@ namespace StatePattern.Main
         public LevelService LevelService { get; private set; }
         public PlayerService PlayerService { get; private set; }
         public EnemyService EnemyService { get; private set; }
+        public PontuationService PontuationService { get; private set;}
 
         [SerializeField] private UIService uiService;
         public UIService UIService => uiService;
@@ -45,6 +46,7 @@ namespace StatePattern.Main
             LevelService = new LevelService(levelScriptableObjects);
             PlayerService = new PlayerService(playerScriptableObject);
             EnemyService = new EnemyService();
+            PontuationService = new PontuationService();
         }
 
         private void Start() => UIService.ShowLevelSelectionUI(levelScriptableObjects.Count);

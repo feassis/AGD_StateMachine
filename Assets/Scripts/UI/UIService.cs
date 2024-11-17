@@ -53,6 +53,12 @@ namespace StatePattern.UI
             levelEndController.PlayerLost();
         }
 
+        public void StartALevel()
+        {
+            gameplayController.Show();
+            levelEndController.Hide();
+        }
+
         public void UpdatePlayerHealth(float healthRatio) => gameplayController.SetPlayerHealthUI(healthRatio);
 
         public void UpdateEnemyCount(int activeEnemies, int totalEnemies) => gameplayController.SetEnemyCount(activeEnemies, totalEnemies);

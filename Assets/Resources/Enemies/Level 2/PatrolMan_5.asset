@@ -29,3 +29,7 @@ MonoBehaviour:
   - {x: 5, y: 1.5, z: 5}
   - {x: 7.5, y: 1.5, z: -1}
   PlayerStoppingDistance: 2
+  TeleportingRadius: 4
+  CloneCount: 0
+  coinPrefab: {fileID: 929471539573856314, guid: a3d0592b3b8b29242baa2fae4c2bc331, type: 3}
+  coinsToSpawn: 2

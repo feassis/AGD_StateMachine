@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using StatePattern.Main;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +25,10 @@ namespace StatePattern.UI
         public void OnHomeButtonClicked() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
         public void OnQuitButtonClicked() => Application.Quit();
+        public void OnNextLevelButtonClicked()
+        {
+            GameService.Instance.LevelService.GoToNextLevel();
+        }
 
         public void PlayerWon()
         {
