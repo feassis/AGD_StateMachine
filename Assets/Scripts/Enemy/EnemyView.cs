@@ -17,6 +17,7 @@ namespace StatePattern.Enemy
         [SerializeField] private GameObject bloodStain;
         [SerializeField] private SpriteRenderer enemyGraphic;
         [SerializeField] private List<EnemyColor> enemyColors;
+        [SerializeField] private FieldOfView fieldOfView;
 
         private void Start()
         {
@@ -54,7 +55,16 @@ namespace StatePattern.Enemy
             }
         }
 
-        private void Update() => Controller?.UpdateEnemy();
+        private void Update()
+        {
+            Controller?.UpdateEnemy();
+            
+        }
+
+        private void LateUpdate()
+        {
+            fieldOfView.SetOrigin(transform.position);
+        }
 
         private void OnTriggerEnter(Collider other)
         {
