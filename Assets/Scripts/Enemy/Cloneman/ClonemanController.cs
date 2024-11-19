@@ -1,6 +1,7 @@
 ﻿using StatePattern.Main;
 using StatePattern.Player;
 using StatePattern.StateMachine;
+using UnityEngine;
 
 namespace StatePattern.Enemy
 {
@@ -8,6 +9,9 @@ namespace StatePattern.Enemy
     {
         private ClonemanStateMachine stateMachine;
         public int CloneCountLeft { get; private set; }
+
+        private bool playerInRange;
+        private float timer;
 
         public ClonemanController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {
@@ -28,16 +32,41 @@ namespace StatePattern.Enemy
             if (currentState == EnemyState.DEACTIVE)
                 return;
 
+            base.UpdateEnemy();
             stateMachine.Update();
+
+            if(timer > 0)
+            {
+                timer -= Time.deltaTime;
+            }
+
+            if (!playerInRange && !IsPlayerOnSight(GameService.Instance.PlayerService.GetPlayer().GetPlayerView().gameObject))
+            {
+                return;
+            }
+
+            if (!(stateMachine.currentState is ChasingState<ClonemanController>) && !(stateMachine.currentState is CloningState<ClonemanController>) && !(stateMachine.currentState is ShootingState<ClonemanController>))
+            {
+                if(timer <= 0)
+                {
+                    GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.ENEMY_ALERT);
+                    timer = 1;
+                }
+
+                stateMachine.ChangeState(States.CHASING);
+            }
         }
 
         public override void PlayerEnteredRange(PlayerController targetToSet)
         {
-            base.PlayerEnteredRange(targetToSet);
-            stateMachine.ChangeState(States.CHASING);
+            playerInRange = true;
         }
 
-        public override void PlayerExitedRange() => stateMachine.ChangeState(States.IDLE);
+        public override void PlayerExitedRange()
+        {
+            stateMachine.ChangeState(States.IDLE);
+            playerInRange = false;
+        }
 
         public override void Die()
         {

@@ -31,5 +31,7 @@ namespace StatePattern.Enemy
 
         public Coin coinPrefab;
         public int coinsToSpawn = 1;
+        public FieldOfViewSO fieldOfViewSO;
+        public FieldOfView fieldOfViewPrefab;
     }
 }

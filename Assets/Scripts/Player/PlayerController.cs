@@ -27,6 +27,8 @@ namespace StatePattern.Player
             InitializeVariables();
         }
 
+        public PlayerView GetPlayerView() => playerView;
+
         private void InitializeView()
         {
             playerView = Object.Instantiate(playerScriptableObject.PlayerPrefab);

@@ -35,3 +35,5 @@ MonoBehaviour:
   CloneCount: 0
   coinPrefab: {fileID: 929471539573856314, guid: a3d0592b3b8b29242baa2fae4c2bc331, type: 3}
   coinsToSpawn: 3
+  fieldOfViewSO: {fileID: 11400000, guid: ec008bbb14fbc06429288e642b6aff81, type: 2}
+  fieldOfViewPrefab: {fileID: 2743989285891954756, guid: 2ff0827b0f307374e9958b0376f8e9af, type: 3}

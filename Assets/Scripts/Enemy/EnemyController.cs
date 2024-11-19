@@ -1,8 +1,10 @@
-﻿using StatePattern.Enemy.Bullet;
+﻿using CodeMonkey.Utils;
+using StatePattern.Enemy.Bullet;
 using StatePattern.Main;
 using StatePattern.Player;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.Image;
 
 namespace StatePattern.Enemy
 {
@@ -18,12 +20,20 @@ namespace StatePattern.Enemy
         public Quaternion Rotation => enemyView.transform.rotation;
         public Vector3 Position => enemyView.transform.position;
 
+        private FieldOFViewController fieldOFViewController;
+
 
         public EnemyController(EnemyScriptableObject enemyScriptableObject)
         {
             this.enemyScriptableObject = enemyScriptableObject;
             InitializeView();
             InitializeVariables();
+            InitializeFieldOfView();
+        }
+
+        public void InitializeFieldOfView()
+        {
+            fieldOFViewController = new FieldOFViewController(enemyScriptableObject.fieldOfViewSO, enemyScriptableObject.fieldOfViewPrefab);
         }
 
         private void InitializeView()
@@ -54,7 +64,27 @@ namespace StatePattern.Enemy
             {
                 GameObject.Instantiate(enemyScriptableObject.coinPrefab, enemyView.transform.position, Quaternion.identity);
             }
+
+            fieldOFViewController.Destroy();
             enemyView.Destroy();
+        }
+
+        public float GetViewRange() => enemyScriptableObject.fieldOfViewSO.ViewDistance;
+        public float GetViewFOV() => enemyScriptableObject.fieldOfViewSO.FOV;
+        public int GetObstacleLayer() => enemyScriptableObject.fieldOfViewSO.ColisionMask;
+
+        public bool IsPlayerOnSight(GameObject other)
+        {
+            var dir = other.transform.position - enemyView.transform.position;
+
+            Debug.DrawRay(enemyView.transform.position, dir, Color.red, 1f);
+            Debug.DrawRay(enemyView.transform.position, enemyView.transform.forward, Color.white, 1f);
+
+
+            bool IsObstructed = Physics.Raycast(enemyView.transform.position, dir, GetViewRange(), GetObstacleLayer());
+            bool isOnCorrectAngle = Vector3.Angle(enemyView.transform.forward, dir) < GetViewFOV() / 2;
+
+            return isOnCorrectAngle && !IsObstructed;
         }
 
         public void ToggleKillOverlay(bool value) => GameService.Instance.UIService.ToggleKillOverlay(value);
@@ -81,7 +111,11 @@ namespace StatePattern.Enemy
 
         public virtual void PlayerExitedRange() { }
 
-        public virtual void UpdateEnemy() { }
+        public virtual void UpdateEnemy()
+        {
+            fieldOFViewController.SetAimDirection(enemyView.transform.right * -1);
+            fieldOFViewController.SetOrigin(enemyView.transform.position);
+        }
     }
 
     public enum EnemyState

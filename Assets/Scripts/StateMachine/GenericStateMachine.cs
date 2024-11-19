@@ -6,7 +6,7 @@ namespace StatePattern.StateMachine
     public class GenericStateMachine<T> where T : EnemyController
     {
         protected T Owner;
-        protected IState currentState;
+        public IState currentState {  get; protected set; }
         protected Dictionary<States, IState> States = new Dictionary<States, IState>();
 
         public GenericStateMachine(T Owner) => this.Owner = Owner;

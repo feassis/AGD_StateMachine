@@ -1,39 +1,71 @@
 using CodeMonkey.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.UI.Image;
+using UnityEngine.Rendering.PostProcessing;
+using StatePattern.Player;
 
 [RequireComponent(typeof(MeshRenderer))]
 public class FieldOfView : MonoBehaviour
-{
-    [SerializeField] private LayerMask colisionMask;
-    private Mesh mesh;
+{ 
+    public Mesh Mesh { get; private set; }
 
-    Vector3 origin = Vector3.zero;
-    float startingAngle = 0;
-    float fov;
+    private FieldOFViewController controller;
+
 
     private void Start()
     {
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-        fov = 90;
+        Mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = Mesh;
+    }
+
+    public void SetViewController(FieldOFViewController controller)
+    {
+        this.controller = controller;
     }
 
     private void Update()
     {
-        CreateViewMesh();
+        if (controller == null)
+        {
+            return;
+        }
+
+        controller.CreateViewMesh();
+    }
+}
+
+public class FieldOFViewController
+{
+    private FieldOfViewSO model;
+    private FieldOfView view;
+
+    private float startingAngle;
+    Vector3 origin = Vector3.zero;
+
+
+    public FieldOFViewController(FieldOfViewSO model, FieldOfView view)
+    {
+        this.model = model;
+        this.view = GameObject.Instantiate<FieldOfView>(view);
+        this.view.SetViewController(this);
     }
 
-    private void CreateViewMesh()
+
+    public void Destroy()
     {
-        
-        Vector3 origin = Vector3.zero;
-        int rayCount = 50;
+        GameObject.Destroy(this.view.gameObject);
+    }
+
+   public void CreateViewMesh()
+    {
+        int rayCount = model.RayAmount;
         float angle = startingAngle;
-        float angleIncrease = fov / rayCount;
-        float viewDistance = 5f;
+        float angleIncrease = model.FOV / rayCount;
+        float viewDistance = model.ViewDistance;
 
         Vector3[] vertices = new Vector3[rayCount + 1 + 1];
         Vector2[] uv = new Vector2[vertices.Length];
@@ -47,7 +79,7 @@ public class FieldOfView : MonoBehaviour
         {
             Vector3 vertex;
 
-            Physics.Raycast(transform.position, UtilsClass.GetVectorFromAngle(angle), out RaycastHit hitInfo, viewDistance, colisionMask);
+            Physics.Raycast(origin, UtilsClass.GetVectorFromAngle(angle), out RaycastHit hitInfo, viewDistance, model.ColisionMask);
 
             if (hitInfo.collider == null)
             {
@@ -77,9 +109,9 @@ public class FieldOfView : MonoBehaviour
         triangles[1] = 1;
         triangles[2] = 2;
 
-        mesh.vertices = vertices;
-        mesh.uv = uv;
-        mesh.triangles = triangles;
+        view.Mesh.vertices = vertices;
+        view.Mesh.uv = uv;
+        view.Mesh.triangles = triangles;
     }
 
     public void SetOrigin(Vector3 origin)
@@ -89,6 +121,6 @@ public class FieldOfView : MonoBehaviour
 
     public void SetAimDirection(Vector3 aimDirection)
     {
-        startingAngle = UtilsClass.GetAngleFromVectorFloatXZ(aimDirection) - fov / 2f ;
+        startingAngle = UtilsClass.GetAngleFromVectorFloatXZ(aimDirection) - model.FOV / 2f;
     }
 }

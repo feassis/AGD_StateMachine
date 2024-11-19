@@ -10,6 +10,8 @@ namespace StatePattern.Enemy
     {
         private OnePunchManStateMachine stateMachine;
 
+        private bool isPlayerInRange;
+
         public OnePunchManController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {
             enemyView.SetController(this);
@@ -24,15 +26,33 @@ namespace StatePattern.Enemy
             if (currentState == EnemyState.DEACTIVE)
                 return;
 
+            base.UpdateEnemy();
             stateMachine.Update();
+
+            if (!isPlayerInRange)
+            {
+                return;
+            }
+
+            if (IsPlayerOnSight(GameService.Instance.PlayerService.GetPlayer().GetPlayerView().gameObject))
+            {
+                if(!(stateMachine.currentState is ShootingState<OnePunchManController>))
+                {
+                    GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.ENEMY_ALERT);
+                }
+                stateMachine.ChangeState(States.SHOOTING);
+            }
         }
 
         public override void PlayerEnteredRange(PlayerController targetToSet)
         {
-            base.PlayerEnteredRange(targetToSet);
-            stateMachine.ChangeState(States.SHOOTING);
+            isPlayerInRange = true;
         }
 
-        public override void PlayerExitedRange() => stateMachine.ChangeState(States.IDLE);
+        public override void PlayerExitedRange()
+        {
+            isPlayerInRange = false;
+            stateMachine.ChangeState(States.IDLE);
+        }
     }
 }
